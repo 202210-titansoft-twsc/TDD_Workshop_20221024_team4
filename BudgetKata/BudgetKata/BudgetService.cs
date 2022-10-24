@@ -34,9 +34,18 @@ public class BudgetService
             }
 
             var currentDate = startDate;
+
             while (currentDate <= endDate)
             {
-                result+= dailyAmounts[currentDate.ToString("yyyyMM")];
+                var key = currentDate.ToString("yyyyMM");
+
+                if (!dailyAmounts.ContainsKey(key))
+                {
+                    currentDate = currentDate.AddDays(1);
+                    continue;
+                }
+
+                result += dailyAmounts[key];
                 currentDate = currentDate.AddDays(1);
             }
 

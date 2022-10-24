@@ -77,13 +77,31 @@ public class BudgetServiceTests
             {
                 YearMonth = "202210",
                 Amount = 3100
-            },new Budget
+            }, new Budget
             {
                 YearMonth = "202211",
                 Amount = 300
             });
 
         var totalAmount = WhenQuery(new DateTime(2022, 10, 1), new DateTime(2022, 11, 5));
+        totalAmount.Should()!.Be(3150m);
+    }
+
+    [Test]
+    public void cross_month_with_lost_budget()
+    {
+        GivenBudgets(
+            new Budget
+            {
+                YearMonth = "202210",
+                Amount = 3100
+            }, new Budget
+            {
+                YearMonth = "202212",
+                Amount = 310
+            });
+
+        var totalAmount = WhenQuery(new DateTime(2022, 10, 1), new DateTime(2022, 12, 5));
         totalAmount.Should()!.Be(3150m);
     }
 
