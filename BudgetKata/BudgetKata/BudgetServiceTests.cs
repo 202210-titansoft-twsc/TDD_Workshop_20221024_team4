@@ -117,7 +117,7 @@ public class BudgetServiceTests
             {
                 YearMonth = "202112",
                 Amount = 31000
-            },new Budget
+            }, new Budget
             {
                 YearMonth = "202212",
                 Amount = 310
@@ -126,6 +126,22 @@ public class BudgetServiceTests
         var totalAmount = WhenQuery(new DateTime(2021, 10, 1), new DateTime(2022, 12, 5));
         totalAmount.Should()!.Be(3100m + 31000m + 50m);
     }
+
+    [Test]
+    public void no_budget_in_start_month_and_tail_month()
+    {
+        GivenBudgets(
+            new Budget
+            {
+                YearMonth = "202211",
+                Amount = 31000
+            });
+
+        var totalAmount = WhenQuery(new DateTime(2022, 10, 1), new DateTime(2022, 12, 5));
+        totalAmount.Should()!.Be(31000m);
+    }
+    
+
 
     private void GivenBudgets(params Budget[] budgets)
     {
