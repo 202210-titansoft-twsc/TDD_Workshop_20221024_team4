@@ -20,18 +20,10 @@ public class BudgetServiceTests
         var totalAmount = WhenQuery(new DateTime(2022, 10, 1), new DateTime(2022, 10, 31));
         totalAmount.Should()!.Be(0m);
     }
+    
 
     private decimal WhenQuery(DateTime startDate, DateTime endDate)
     {
-        var query = _budgetService.Query(startDate, endDate);
-        return query;
-    }
-}
-
-public class BudgetService
-{
-    public decimal Query(DateTime startDate, DateTime endDate)
-    {
-        return 0m;
+        return _budgetService.Query(startDate, endDate);
     }
 }
