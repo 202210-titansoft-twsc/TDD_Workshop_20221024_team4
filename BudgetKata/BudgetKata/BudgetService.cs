@@ -22,7 +22,6 @@ public class BudgetService
 
         if (budgets.Any())
         {
-            var result = 0m;
             var dailyAmounts = new Dictionary<string, decimal>();
 
             foreach (var budget in budgets)
@@ -33,21 +32,18 @@ public class BudgetService
                 dailyAmounts.Add(budget.YearMonth, dailyAmount);
             }
 
-            var currentDate = startDate;
+            var startMonthFirstDate = new DateTime(startDate.Year, startDate.Month, 1);
+            var endMonthLastDate = new DateTime(endDate.Year, endDate.Month, 1).AddMonths(1).AddDays(-1);
+            var headExcludedDays = (startDate - startMonthFirstDate).TotalDays;
+            var tailExcludedDays = (endMonthLastDate - endDate).TotalDays;
 
-            while (currentDate <= endDate)
-            {
-                var key = currentDate.ToString("yyyyMM");
+            var totalAmount = budgets.Where(b => DateTime.ParseExact(b.YearMonth, "yyyyMM", CultureInfo.InvariantCulture) >= startMonthFirstDate &&
+                                         DateTime.ParseExact(b.YearMonth, "yyyyMM", CultureInfo.InvariantCulture) <= endMonthLastDate).Sum(b => b.Amount);
 
-                if (dailyAmounts.ContainsKey(key))
-                {
-                    result += dailyAmounts[key];
-                }
+            var headExcludedAmount = (decimal) headExcludedDays * dailyAmounts[startDate.ToString("yyyyMM")];
+            var tailExcludedAmount = (decimal) tailExcludedDays * dailyAmounts[endDate.ToString("yyyyMM")];
 
-                currentDate = currentDate.AddDays(1);
-            }
-
-            return result;
+            return totalAmount - headExcludedAmount - tailExcludedAmount;
         }
 
         return 0;
