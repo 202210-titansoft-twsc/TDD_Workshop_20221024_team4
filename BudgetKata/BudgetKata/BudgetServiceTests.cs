@@ -34,10 +34,11 @@ public class BudgetServiceTests
             new Budget
             {
                 YearMonth = "202210",
-                Amount = 100
+                Amount = 3100
             });
+
         var totalAmount = WhenQuery(new DateTime(2022, 10, 1), new DateTime(2022, 10, 31));
-        totalAmount.Should()!.Be(100m);
+        totalAmount.Should()!.Be(3100m);
     }
 
     [Test]
@@ -49,10 +50,11 @@ public class BudgetServiceTests
                 YearMonth = "202210",
                 Amount = 3100
             });
+
         var totalAmount = WhenQuery(new DateTime(2022, 10, 29), new DateTime(2022, 10, 29));
         totalAmount.Should()!.Be(100m);
     }
-    
+
     [Test]
     public void multi_days()
     {
@@ -62,15 +64,33 @@ public class BudgetServiceTests
                 YearMonth = "202210",
                 Amount = 3100
             });
+
         var totalAmount = WhenQuery(new DateTime(2022, 10, 27), new DateTime(2022, 10, 29));
         totalAmount.Should()!.Be(300m);
+    }
+
+    [Test]
+    public void cross_month()
+    {
+        GivenBudgets(
+            new Budget
+            {
+                YearMonth = "202210",
+                Amount = 3100
+            },new Budget
+            {
+                YearMonth = "202211",
+                Amount = 300
+            });
+
+        var totalAmount = WhenQuery(new DateTime(2022, 10, 1), new DateTime(2022, 11, 5));
+        totalAmount.Should()!.Be(3150m);
     }
 
     private void GivenBudgets(params Budget[] budgets)
     {
         _budgetRepository.GetAll().Returns(budgets.ToList());
     }
-
 
     private decimal WhenQuery(DateTime startDate, DateTime endDate)
     {
