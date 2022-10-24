@@ -39,13 +39,11 @@ public class BudgetService
             {
                 var key = currentDate.ToString("yyyyMM");
 
-                if (!dailyAmounts.ContainsKey(key))
+                if (dailyAmounts.ContainsKey(key))
                 {
-                    currentDate = currentDate.AddDays(1);
-                    continue;
+                    result += dailyAmounts[key];
                 }
 
-                result += dailyAmounts[key];
                 currentDate = currentDate.AddDays(1);
             }
 
