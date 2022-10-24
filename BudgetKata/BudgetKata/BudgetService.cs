@@ -15,10 +15,16 @@ public class BudgetService
     public decimal Query(DateTime startDate, DateTime endDate)
     {
         var budgets = _budgeRepo.GetAll();
+        var daysInMonth = DateTime.DaysInMonth(startDate.Year, startDate.Month);
 
+        if (startDate == endDate)
+        {
+            return (decimal)budgets.First().Amount / daysInMonth;
+        }
+        
         if (budgets.Any())
         {
-            return budgets.Sum(b => b.Amount);
+            return budgets.First().Amount;
         }
         return 0;
     }

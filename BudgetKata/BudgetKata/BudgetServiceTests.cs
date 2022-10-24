@@ -28,7 +28,7 @@ public class BudgetServiceTests
     }
 
     [Test]
-    public void one_month()
+    public void whole_month()
     {
         GivenBudgets(
             new Budget
@@ -37,6 +37,19 @@ public class BudgetServiceTests
                 Amount = 100
             });
         var totalAmount = WhenQuery(new DateTime(2022, 10, 1), new DateTime(2022, 10, 31));
+        totalAmount.Should()!.Be(100m);
+    }
+
+    [Test]
+    public void one_day()
+    {
+        GivenBudgets(
+            new Budget
+            {
+                YearMonth = "202210",
+                Amount = 3100
+            });
+        var totalAmount = WhenQuery(new DateTime(2022, 10, 29), new DateTime(2022, 10, 29));
         totalAmount.Should()!.Be(100m);
     }
 
