@@ -140,7 +140,19 @@ public class BudgetServiceTests
         var totalAmount = WhenQuery(new DateTime(2022, 10, 1), new DateTime(2022, 12, 5));
         totalAmount.Should()!.Be(31000m);
     }
-    
+
+    [Test]
+    public void invalid_end_date()
+    {
+        GivenBudgets(new Budget
+        {
+            YearMonth = "202210",
+            Amount = 31000
+        });
+
+        var totalAmount = WhenQuery(new DateTime(2022, 10, 1), new DateTime(2021, 12, 5));
+        totalAmount.Should()!.Be(0m);
+    }
 
 
     private void GivenBudgets(params Budget[] budgets)
