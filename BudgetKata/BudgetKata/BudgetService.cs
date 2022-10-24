@@ -26,7 +26,7 @@ public class BudgetService
 
             foreach (var budget in budgets)
             {
-                var date = DateTime.ParseExact(budget.YearMonth, "yyyyMM", CultureInfo.InvariantCulture);
+                var date = budget.FirstDateInMonth;
                 var daysInThisMonth = DateTime.DaysInMonth(date.Year, date.Month);
                 var dailyAmount = (decimal)budget.Amount / daysInThisMonth;
                 dailyAmounts.Add(budget.YearMonth, dailyAmount);
@@ -37,8 +37,8 @@ public class BudgetService
             var headExcludedDays = (startDate - startMonthFirstDate).TotalDays;
             var tailExcludedDays = (endMonthLastDate - endDate).TotalDays;
 
-            var totalAmount = budgets.Where(b => DateTime.ParseExact(b.YearMonth, "yyyyMM", CultureInfo.InvariantCulture) >= startMonthFirstDate &&
-                                         DateTime.ParseExact(b.YearMonth, "yyyyMM", CultureInfo.InvariantCulture) <= endMonthLastDate).Sum(b => b.Amount);
+            var totalAmount = budgets.Where(b => b.FirstDateInMonth >= startMonthFirstDate &&
+                                         b.FirstDateInMonth <= endMonthLastDate).Sum(b => b.Amount);
 
             var headExcludedAmount = (decimal) headExcludedDays * dailyAmounts[startDate.ToString("yyyyMM")];
             var tailExcludedAmount = (decimal) tailExcludedDays * dailyAmounts[endDate.ToString("yyyyMM")];
